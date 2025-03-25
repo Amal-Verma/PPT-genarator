@@ -25,7 +25,7 @@ export default function PresentationForm({
         </label>
         <textarea
           id="prompt"
-          className="w-full border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+          className="w-full border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-stone-900"
           rows={4}
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}

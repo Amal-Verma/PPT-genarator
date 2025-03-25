@@ -84,13 +84,13 @@ export default function PresentationContent({
             // Loading state for current slide
             <div className="flex-1 flex flex-col items-center justify-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4"></div>
-              <p className="text-gray-500">Generating slide content...</p>
+              <p className="text-gray-700">Generating slide content...</p>
             </div>
           ) : (
             // Render slide content if it's loaded
             <>
-              <h3 className="text-2xl font-bold mb-6 text-center">{currentSlide?.Title}</h3>
-              <div className="flex-1">
+              <h3 className="text-2xl font-bold mb-6 text-center text-gray-900 border-b pb-4">{currentSlide?.Title}</h3>
+              <div className="flex-1 bg-white">
                 {currentSlide && <SlideContentRenderer slide={currentSlide} />}
               </div>
             </>
@@ -99,12 +99,12 @@ export default function PresentationContent({
       </div>
 
       {/* Slide thumbnails/navigation */}
-      <div className="grid grid-cols-5 gap-2">
+      <div className="grid grid-cols-5 gap-2 mt-4">
         {slides.map((slide, index) => (
           <div 
             key={slide.SlideNumber}
             onClick={() => setCurrentSlideIndex(index)}
-            className={`cursor-pointer p-2 rounded border ${currentSlideIndex === index ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}
+            className={`cursor-pointer p-2 rounded border ${currentSlideIndex === index ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-white'}`}
           >
             {isSlideLoading(slide.SlideNumber) ? (
               // Loading indicator for thumbnail
@@ -114,8 +114,8 @@ export default function PresentationContent({
             ) : (
               // Simple thumbnail content
               <div className="text-xs truncate">
-                <div className="font-semibold truncate">{slide.Title}</div>
-                <div className="text-gray-500">Slide {slide.SlideNumber}</div>
+                <div className="font-semibold truncate text-gray-900">{slide.Title}</div>
+                <div className="text-gray-600">Slide {slide.SlideNumber}</div>
               </div>
             )}
           </div>

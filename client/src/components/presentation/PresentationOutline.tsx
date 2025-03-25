@@ -43,7 +43,7 @@ export default function PresentationOutline({
               </span>
               <div>
                 <h3 className="font-bold text-gray-900">{slide.title}</h3>
-                <span className="inline-block mt-1 text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-md font-medium uppercase">
+                <span className="inline-block mt-1 text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-md font-medium uppercase">
                   {slide.type}
                 </span>
               </div>

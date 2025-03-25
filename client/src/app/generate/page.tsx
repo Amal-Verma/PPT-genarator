@@ -123,7 +123,7 @@ export default function GeneratePage() {
           <h1 className="text-3xl font-bold text-gray-900">Presentation Generator</h1>
           <Link 
             href="/"
-            className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
+            className="text-blue-700 hover:text-blue-900 flex items-center gap-1 font-medium"
           >
             <span>← Back to home</span>
           </Link>

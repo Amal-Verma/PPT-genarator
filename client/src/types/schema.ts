@@ -49,7 +49,7 @@ export type SlideContent =
 // Presentation slide structure
 export interface PresentationSlide {
   SlideNumber: number;
-  slideType: string;
+  slideType: 'title' | 'content' | 'quote' | 'index' | 'thankYou';
   Title: string;
   Content: SlideContent;
 }

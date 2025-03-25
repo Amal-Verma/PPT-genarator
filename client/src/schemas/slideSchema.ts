@@ -32,7 +32,7 @@ const slideSchema: SlideSchema = {
         content: 'string[]'
       },
       'title-Prompt': 'A standard slide with title and bullet points',
-      'content-Prompt': 'Create professional bullet points for a slide titled "{title}" in a presentation about {topic}. Focus on key information that would be appropriate for a slide.',
+      'content-Prompt': 'Create professional bullet points for a slide titled "{title}" in a presentation about {topic}. Focus on key information that would be appropriate for a slide. Limit to 4-5 points.',
       'format-Prompt': `FORMAT: Return a JSON object with:
 {
   "title": "The slide title",

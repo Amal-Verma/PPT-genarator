@@ -44,6 +44,7 @@ export async function generateSlideTitles({
   - Vary the slide types appropriately for better engagement
   - Ensure titles are clear, concise, and specific to the topic
   - Each slide title should be under 60 characters
+  - Do NOT include any title slides or thank you slides
   - Do NOT include any formatting, markdown, or explanations in your response
   
   Format your response as a JSON array with each item having a "title" and "type" field.

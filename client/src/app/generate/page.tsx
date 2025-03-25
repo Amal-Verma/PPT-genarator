@@ -26,6 +26,8 @@ export default function GeneratePage() {
   const [isGeneratingPresentation, setIsGeneratingPresentation] = useState<boolean>(false);
   const [presentation, setPresentation] = useState<PresentationSlide[] | null>(null);
   const [activeStep, setActiveStep] = useState<'outline' | 'presentation'>('outline');
+  // New state to track which slides are currently loading
+  const [loadingSlides, setLoadingSlides] = useState<number[]>([]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -41,6 +43,7 @@ export default function GeneratePage() {
       setGeneratedSlides(null); // Clear previous results
       setPresentation(null); // Clear any previous presentation
       setActiveStep('outline');
+      setLoadingSlides([]); // Reset loading state
       
       // Call the slide generator function directly from the client
       const slides = await generateSlideTitles({
@@ -64,6 +67,11 @@ export default function GeneratePage() {
     try {
       setIsGeneratingPresentation(true);
       setActiveStep('presentation');
+      setPresentation([]); // Initialize with empty array to show loader UI
+      
+      // Set all slides to loading state
+      const slideNumbers = Array.from({ length: generatedSlides.length }, (_, i) => i + 1);
+      setLoadingSlides(slideNumbers);
       
       // Use AI to summarize the topic
       const summarizedTopic = await summarizeTopic({
@@ -71,18 +79,34 @@ export default function GeneratePage() {
         maxLength: 150
       });
       
-      // Generate the full presentation
-      const fullPresentation = await generatePresentation({
+      // Generate the full presentation with incremental updates
+      await generatePresentation({
         slides: generatedSlides,
-        topic: summarizedTopic
+        topic: summarizedTopic,
+        onSlideGenerated: (newSlide) => {
+          // Update presentation with the new slide
+          setPresentation(prevSlides => {
+            const updatedSlides = prevSlides ? [...prevSlides] : [];
+            // Find and replace if slide number exists, otherwise add
+            const existingIndex = updatedSlides.findIndex(s => s.SlideNumber === newSlide.SlideNumber);
+            if (existingIndex >= 0) {
+              updatedSlides[existingIndex] = newSlide;
+            } else {
+              updatedSlides.push(newSlide);
+            }
+            // Sort slides by slide number to ensure proper order
+            return updatedSlides.sort((a, b) => a.SlideNumber - b.SlideNumber);
+          });
+          
+          // Remove this slide from loading state
+          setLoadingSlides(prev => prev.filter(num => num !== newSlide.SlideNumber));
+        }
       });
-
-      console.log('Generated presentation:', fullPresentation);
       
-      setPresentation(fullPresentation);
     } catch (err) {
       console.error('Error generating presentation:', err);
       setError('Failed to generate presentation content. Please try again.');
+      setLoadingSlides([]); // Clear loading state on error
     } finally {
       setIsGeneratingPresentation(false);
     }
@@ -116,7 +140,6 @@ export default function GeneratePage() {
         </div>
         
         {isGenerating && <GenerationLoader type="outline" />}
-        {isGeneratingPresentation && <GenerationLoader type="presentation" />}
         
         {generatedSlides && !isGenerating && activeStep === 'outline' && !isGeneratingPresentation && (
           <PresentationOutline 
@@ -127,10 +150,11 @@ export default function GeneratePage() {
           />
         )}
 
-        {presentation && activeStep === 'presentation' && !isGeneratingPresentation && (
+        {presentation && activeStep === 'presentation' && (
           <PresentationContent 
             slides={presentation}
             onBackToOutline={() => setActiveStep('outline')}
+            loadingSlides={loadingSlides}
           />
         )}
       </div>

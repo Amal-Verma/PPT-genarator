@@ -39,6 +39,13 @@ export async function generateSlideTitles({
   Here's information about each slide type:
   ${titlePrompts}
   
+  IMPORTANT RULES:
+  - Create a coherent presentation flow with a logical structure
+  - Vary the slide types appropriately for better engagement
+  - Ensure titles are clear, concise, and specific to the topic
+  - Each slide title should be under 60 characters
+  - Do NOT include any formatting, markdown, or explanations in your response
+  
   Format your response as a JSON array with each item having a "title" and "type" field.
   Example:
   [
@@ -46,7 +53,7 @@ export async function generateSlideTitles({
     {"title": "Wisdom from Alan Turing", "type": "quote"}
   ]
   
-  Only include the JSON array in your response, no other text.
+  Return ONLY the JSON array in your response, nothing else. No explanation, no markdown formatting.
   `;
   
   try {

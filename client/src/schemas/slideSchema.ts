@@ -5,19 +5,30 @@ const slideSchema: SlideSchema = {
     content: {
       schema: {
         title: 'string',
-        content: 'Array<string>'
+        content: 'string[]'
       },
-      'title-Prompt': 'Content slides present information or explain concepts related to the presentation topic.',
-      'content-Prompt': ''
+      'title-Prompt': 'A standard slide with title and bullet points',
+      'content-Prompt': 'Create professional bullet points for a slide titled "{title}" in a presentation about {topic}. Focus on key information that would be appropriate for a slide.',
+      'format-Prompt': `FORMAT: Return a JSON object with:
+{
+  "title": "The slide title",
+  "content": ["Point 1", "Point 2", ...]
+}`
     },
     quote: {
       schema: {
-        author: 'string',
-        quote: 'string'
+        quote: 'string',
+        author: 'string'
       },
-      'title-Prompt': 'Quote slides feature important quotations with their authors relevant to the presentation topic.',
-      'content-Prompt': ''
+      'title-Prompt': 'A slide featuring a relevant quote from an expert or notable figure',
+      'content-Prompt': 'Find a relevant and powerful quote related to "{title}" for a presentation about {topic}. Include the author of the quote.',
+      'format-Prompt': `FORMAT: Return a JSON object with:
+{
+  "quote": "The quotation text",
+  "author": "Name of the person who said or wrote the quote"
+}`
     }
+    // Add more slide types as needed
   }
 };
 

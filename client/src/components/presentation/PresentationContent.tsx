@@ -4,12 +4,14 @@ import DevJsonModal from '@/components/dev/DevJsonModal';
 import SlideContentRenderer from './SlideContentRenderer';
 
 interface PresentationContentProps {
+  presentationName: string;
   slides: PresentationSlide[];
   onBackToOutline: () => void;
   loadingSlides?: number[]; // Add the loadingSlides prop
 }
 
 export default function PresentationContent({ 
+  presentationName,
   slides, 
   onBackToOutline,
   loadingSlides = [] // Default to empty array if not provided
@@ -40,7 +42,12 @@ export default function PresentationContent({
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mb-8">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-gray-800">Presentation Preview</h2>
+        <div>
+          <h2 className="text-xl font-bold text-gray-800">Presentation Preview</h2>
+          {presentationName && (
+            <p className="text-sm text-gray-600 mt-1">{presentationName}</p>
+          )}
+        </div>
         <button
           onClick={onBackToOutline}
           className="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 rounded"
@@ -131,6 +138,14 @@ export default function PresentationContent({
         >
           Export Presentation
         </button>
+
+        <button
+          onClick={() => setIsJsonModalOpen(true)}
+          className="px-4 py-2 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 transition"
+        >
+          View JSON Data
+        </button>
+
       </div>
       
       {/* Development-only modal for showing JSON data */}
@@ -138,7 +153,7 @@ export default function PresentationContent({
         isOpen={isJsonModalOpen}
         onClose={() => setIsJsonModalOpen(false)}
         title="Presentation JSON Data (Development Only)"
-        data={slides}
+        data={{presentationName, slides}}
       />
     </div>
   );

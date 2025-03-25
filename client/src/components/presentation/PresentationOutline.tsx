@@ -6,6 +6,7 @@ interface SlideTitle {
 }
 
 interface PresentationOutlineProps {
+  presentationName: string;
   slides: SlideTitle[];
   onStartOver: () => void;
   onCreatePresentation: () => void;
@@ -13,6 +14,7 @@ interface PresentationOutlineProps {
 }
 
 export default function PresentationOutline({
+  presentationName,
   slides,
   onStartOver,
   onCreatePresentation,
@@ -21,7 +23,12 @@ export default function PresentationOutline({
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-gray-800">Generated Presentation Outline</h2>
+        <div>
+          <h2 className="text-xl font-bold text-gray-800">Generated Presentation Outline</h2>
+          {presentationName && (
+            <p className="text-sm text-gray-600 mt-1">{presentationName}</p>
+          )}
+        </div>
         <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
           {slides.length} slides generated
         </span>

@@ -11,15 +11,22 @@ import { PresentationSlide, SlideContent } from '@/types/schema';
  * @returns {Promise<PresentationSlide[]>} - Complete presentation structure
  */
 export async function generatePresentation({ 
+  presentationName,
   slides, 
   topic,
   onSlideGenerated
 }: { 
+  presentationName: string;
   slides: Array<{ title: string; type: string }>;
   topic: string;
   onSlideGenerated?: (slide: PresentationSlide) => void;
 }): Promise<PresentationSlide[]> {
   const presentation: PresentationSlide[] = [];
+
+  const slideTitles = slides[1].title === "index" ? slides.slice(2, -1): slides.slice(1, -1);
+
+  const slideTitlesString: string = slideTitles.map(slide => slide.title).join('\n');
+
   
   // Process each slide sequentially to respect rate limits
   for (let i = 0; i < slides.length; i++) {
@@ -28,9 +35,11 @@ export async function generatePresentation({
     try {
       // Generate content for this slide using the imported function
       const content = await generateSlideContent({ 
+        presentationName,
         title, 
         type, 
-        topic 
+        topic,
+        slideTitlesString
       });
       
       // Create the new slide

@@ -24,8 +24,27 @@ export interface QuoteSlideContent {
   quote: string;
 }
 
+// New slide content types
+export interface TitleSlideContent {
+  mainTitle: string;
+  subtitle: string;
+}
+
+export interface IndexSlideContent {
+  items: string[];
+}
+
+export interface ThankYouSlideContent {
+  message?: string; // Optional custom message
+}
+
 // Union type for slide content based on slide type
-export type SlideContent = ContentSlideContent | QuoteSlideContent;
+export type SlideContent = 
+  | ContentSlideContent 
+  | QuoteSlideContent
+  | TitleSlideContent
+  | IndexSlideContent
+  | ThankYouSlideContent;
 
 // Presentation slide structure
 export interface PresentationSlide {
@@ -33,4 +52,10 @@ export interface PresentationSlide {
   slideType: string;
   Title: string;
   Content: SlideContent;
+}
+
+// New interface for overall presentation structure
+export interface Presentation {
+  name: string; // Summary/name of the entire presentation
+  slides: PresentationSlide[];
 }

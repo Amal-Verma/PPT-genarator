@@ -22,6 +22,7 @@ export default function GeneratePage() {
   const [numberOfSlides, setNumberOfSlides] = useState<number>(5);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [presentationName, setPresentationName] = useState<string>('');
   const [generatedSlides, setGeneratedSlides] = useState<SlideTitle[] | null>(null);
   const [isGeneratingPresentation, setIsGeneratingPresentation] = useState<boolean>(false);
   const [presentation, setPresentation] = useState<PresentationSlide[] | null>(null);
@@ -41,17 +42,19 @@ export default function GeneratePage() {
       setError(null);
       setIsGenerating(true);
       setGeneratedSlides(null); // Clear previous results
+      setPresentationName(''); // Clear previous presentation name
       setPresentation(null); // Clear any previous presentation
       setActiveStep('outline');
       setLoadingSlides([]); // Reset loading state
       
       // Call the slide generator function directly from the client
-      const slides = await generateSlideTitles({
+      const result = await generateSlideTitles({
         prompt,
         numberOfSlides
       });
       
-      setGeneratedSlides(slides);
+      setPresentationName(result.name);
+      setGeneratedSlides(result.slides);
     } catch (err) {
       console.error('Error generating slides:', err);
       setError('Failed to generate slides. Please try again.');
@@ -81,6 +84,7 @@ export default function GeneratePage() {
       
       // Generate the full presentation with incremental updates
       await generatePresentation({
+        presentationName: presentationName,
         slides: generatedSlides,
         topic: summarizedTopic,
         onSlideGenerated: (newSlide) => {
@@ -143,6 +147,7 @@ export default function GeneratePage() {
         
         {generatedSlides && !isGenerating && activeStep === 'outline' && !isGeneratingPresentation && (
           <PresentationOutline 
+            presentationName={presentationName}
             slides={generatedSlides}
             onStartOver={() => setGeneratedSlides(null)}
             onCreatePresentation={handleCreatePresentation}
@@ -152,6 +157,7 @@ export default function GeneratePage() {
 
         {presentation && activeStep === 'presentation' && (
           <PresentationContent 
+            presentationName={presentationName}
             slides={presentation}
             onBackToOutline={() => setActiveStep('outline')}
             loadingSlides={loadingSlides}

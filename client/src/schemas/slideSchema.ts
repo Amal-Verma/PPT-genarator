@@ -2,6 +2,30 @@ import { SlideSchema } from '@/types/schema';
 
 const slideSchema: SlideSchema = {
   slides: {
+    title: {
+      schema: {
+        mainTitle: 'string',
+        subtitle: 'string'
+      },
+      'title-Prompt': 'The first slide with main title and subtitle',
+      'content-Prompt': 'Create a compelling title and subtitle for a presentation about {topic}. The title should be catchy and the subtitle should briefly explain the presentation\'s purpose.',
+      'format-Prompt': `FORMAT: Return a JSON object with:
+{
+  "mainTitle": "The main presentation title",
+  "subtitle": "A brief subtitle or tagline"
+}`
+    },
+    index: {
+      schema: {
+        items: 'string[]'
+      },
+      'title-Prompt': 'A table of contents slide showing key topics covered',
+      'content-Prompt': 'Create a concise table of contents for a presentation about {topic}. Include 4-5 main points that will be covered in the presentation.',
+      'format-Prompt': `FORMAT: Return a JSON object with:
+{
+  "items": ["Topic 1", "Topic 2", "Topic 3", "Topic 4", "Topic 5"]
+}`
+    },
     content: {
       schema: {
         title: 'string',
@@ -27,8 +51,18 @@ const slideSchema: SlideSchema = {
   "quote": "The quotation text",
   "author": "Name of the person who said or wrote the quote"
 }`
+    },
+    thankYou: {
+      schema: {
+        message: 'string'
+      },
+      'title-Prompt': 'The final slide thanking the audience',
+      'content-Prompt': 'Create a simple thank you message to end a presentation about {topic}.',
+      'format-Prompt': `FORMAT: Return a JSON object with:
+{
+  "message": "Thank you message (optional)"
+}`
     }
-    // Add more slide types as needed
   }
 };
 

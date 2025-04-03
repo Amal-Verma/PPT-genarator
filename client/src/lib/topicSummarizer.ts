@@ -5,12 +5,12 @@ import { getGeminiResponse } from './gemini';
  * 
  * @param {object} params - The parameters for the function
  * @param {string} params.topic - The full presentation topic to summarize
- * @param {number} params.maxLength - Maximum desired length for the summary (default: 150)
+ * @param {number} params.maxLength - Maximum desired length for the summary (default: 300)
  * @returns {Promise<string>} - AI-generated summary of the topic
  */
 export async function summarizeTopic({
   topic,
-  maxLength = 150
+  maxLength = 300
 }: {
   topic: string;
   maxLength?: number;

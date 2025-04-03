@@ -62,6 +62,100 @@ const slideSchema: SlideSchema = {
 {
   "message": "Thank you message (optional)"
 }`
+    },
+    comparison: {
+      schema: {
+        title: 'string',
+        leftHeader: 'string',
+        rightHeader: 'string',
+        leftPoints: 'string[]',
+        rightPoints: 'string[]'
+      },
+      'title-Prompt': 'A slide comparing two concepts side by side',
+      'content-Prompt': 'Create a comparison slide for a presentation about {topic}. Compare two relevant aspects related to "{title}".',
+      'format-Prompt': `FORMAT: Return a JSON object with:
+{
+  "title": "Comparison title",
+  "leftHeader": "First concept name",
+  "rightHeader": "Second concept name",
+  "leftPoints": ["Point 1", "Point 2", "Point 3"],
+  "rightPoints": ["Point 1", "Point 2", "Point 3"]
+}`
+    },
+    statistics: {
+      schema: {
+        title: 'string',
+        stats: 'object[]'
+      },
+      'title-Prompt': 'A slide highlighting important statistics',
+      'content-Prompt': 'Create a statistics slide for a presentation about {topic}. Include 3-4 key statistics related to "{title}" with brief descriptions.',
+      'format-Prompt': `FORMAT: Return a JSON object with:
+{
+  "title": "Statistics title",
+  "stats": [
+    { "value": "75%", "description": "Brief description of this statistic" },
+    { "value": "$2.5B", "description": "Brief description of this statistic" }
+  ]
+}`
+    },
+    timeline: {
+      schema: {
+        title: 'string',
+        events: 'object[]'
+      },
+      'title-Prompt': 'A slide showing a chronological timeline of events',
+      'content-Prompt': 'Create a timeline slide for a presentation about {topic}. Include 4-5 key events or milestones related to "{title}" in chronological order.',
+      'format-Prompt': `FORMAT: Return a JSON object with:
+{
+  "title": "Timeline title",
+  "events": [
+    { "date": "Year or date", "description": "Description of what happened" },
+    { "date": "Year or date", "description": "Description of what happened" }
+  ]
+}`
+    },
+    definition: {
+      schema: {
+        term: 'string',
+        definition: 'string',
+        examples: 'string[]'
+      },
+      'title-Prompt': 'A slide defining a key term or concept',
+      'content-Prompt': 'Create a definition slide for a presentation about {topic}. Define an important term related to "{title}" and provide examples.',
+      'format-Prompt': `FORMAT: Return a JSON object with:
+{
+  "term": "Term to be defined",
+  "definition": "Clear and concise definition",
+  "examples": ["Example 1", "Example 2"]
+}`
+    },
+    section: {
+      schema: {
+        sectionTitle: 'string',
+        description: 'string'
+      },
+      'title-Prompt': 'A slide indicating a new section of the presentation',
+      'content-Prompt': 'Create a section divider slide for a presentation about {topic}. This will introduce the section about "{title}".',
+      'format-Prompt': `FORMAT: Return a JSON object with:
+{
+  "sectionTitle": "Title of the new section",
+  "description": "Brief description of what this section will cover"
+}`
+    },
+    callToAction: {
+      schema: {
+        title: 'string',
+        mainAction: 'string',
+        steps: 'string[]'
+      },
+      'title-Prompt': 'A slide prompting the audience to take specific actions',
+      'content-Prompt': 'Create a call to action slide for a presentation about {topic}. Include a clear main action and steps related to "{title}".',
+      'format-Prompt': `FORMAT: Return a JSON object with:
+{
+  "title": "Call to Action title",
+  "mainAction": "The primary action you want the audience to take",
+  "steps": ["Step 1", "Step 2", "Step 3"]
+}`
     }
   }
 };

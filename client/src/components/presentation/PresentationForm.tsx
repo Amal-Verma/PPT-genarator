@@ -43,7 +43,7 @@ export default function PresentationForm({
             id="slides"
             type="range"
             min="3"
-            max="25"
+            max="125"
             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
             value={numberOfSlides}
             onChange={(e) => setNumberOfSlides(parseInt(e.target.value))}

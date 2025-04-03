@@ -1,6 +1,19 @@
 import { getGeminiResponse } from './gemini';
 import slideSchema from '../schemas/slideSchema';
-import { SlideContent, ContentSlideContent, QuoteSlideContent, TitleSlideContent, IndexSlideContent, ThankYouSlideContent } from '@/types/schema';
+import { 
+  SlideContent, 
+  ContentSlideContent, 
+  QuoteSlideContent, 
+  TitleSlideContent, 
+  IndexSlideContent, 
+  ThankYouSlideContent,
+  ComparisonSlideContent,
+  StatisticsSlideContent,
+  TimelineSlideContent,
+  DefinitionSlideContent,
+  SectionSlideContent,
+  CallToActionSlideContent
+} from '@/types/schema';
 import { withRetry } from '@/utils/retry';
 
 /**
@@ -99,6 +112,57 @@ REMINDER: Return ONLY the JSON structure, nothing else.
         quote: parsedContent.quote || "Failed to generate a relevant quote.",
         author: parsedContent.author || "Unknown"
       } as QuoteSlideContent;
+    }
+    else if (type === 'comparison') {
+      return {
+        title: parsedContent.title || title,
+        leftHeader: parsedContent.leftHeader || "Option A",
+        rightHeader: parsedContent.rightHeader || "Option B",
+        leftPoints: Array.isArray(parsedContent.leftPoints) ? parsedContent.leftPoints : ["No points available"],
+        rightPoints: Array.isArray(parsedContent.rightPoints) ? parsedContent.rightPoints : ["No points available"]
+      } as ComparisonSlideContent;
+    }
+    else if (type === 'statistics') {
+      if (!Array.isArray(parsedContent.stats)) {
+        parsedContent.stats = [
+          { value: "N/A", description: "Statistics unavailable" }
+        ];
+      }
+      return {
+        title: parsedContent.title || title,
+        stats: parsedContent.stats
+      } as StatisticsSlideContent;
+    }
+    else if (type === 'timeline') {
+      if (!Array.isArray(parsedContent.events)) {
+        parsedContent.events = [
+          { date: "N/A", description: "Timeline events unavailable" }
+        ];
+      }
+      return {
+        title: parsedContent.title || title,
+        events: parsedContent.events
+      } as TimelineSlideContent;
+    }
+    else if (type === 'definition') {
+      return {
+        term: parsedContent.term || title,
+        definition: parsedContent.definition || "Definition unavailable",
+        examples: Array.isArray(parsedContent.examples) ? parsedContent.examples : ["No examples available"]
+      } as DefinitionSlideContent;
+    }
+    else if (type === 'section') {
+      return {
+        sectionTitle: parsedContent.sectionTitle || title,
+        description: parsedContent.description || "New section of the presentation"
+      } as SectionSlideContent;
+    }
+    else if (type === 'callToAction') {
+      return {
+        title: parsedContent.title || title,
+        mainAction: parsedContent.mainAction || "Take action now",
+        steps: Array.isArray(parsedContent.steps) ? parsedContent.steps : ["No steps available"]
+      } as CallToActionSlideContent;
     }
     
     // Default fallback
@@ -235,6 +299,47 @@ export async function generateSlideContent(params: {
       } as IndexSlideContent;
     } else if (params.type === 'thankYou') {
       return { message: "Thank you for your attention!" } as ThankYouSlideContent;
+    } else if (params.type === 'comparison') {
+      return {
+        title: params.title,
+        leftHeader: "Option A",
+        rightHeader: "Option B",
+        leftPoints: ["Feature 1", "Feature 2", "Feature 3"],
+        rightPoints: ["Feature 1", "Feature 2", "Feature 3"]
+      } as ComparisonSlideContent;
+    } else if (params.type === 'statistics') {
+      return {
+        title: params.title,
+        stats: [
+          { value: "75%", description: "Example statistic" },
+          { value: "2x", description: "Example growth metric" }
+        ]
+      } as StatisticsSlideContent;
+    } else if (params.type === 'timeline') {
+      return {
+        title: params.title,
+        events: [
+          { date: "2020", description: "Initial event" },
+          { date: "2022", description: "Latest development" }
+        ]
+      } as TimelineSlideContent;
+    } else if (params.type === 'definition') {
+      return {
+        term: params.title,
+        definition: "Default definition text",
+        examples: ["Example 1", "Example 2"]
+      } as DefinitionSlideContent;
+    } else if (params.type === 'section') {
+      return {
+        sectionTitle: params.title,
+        description: "This section covers important aspects of the topic"
+      } as SectionSlideContent;
+    } else if (params.type === 'callToAction') {
+      return {
+        title: params.title,
+        mainAction: "Take the next step",
+        steps: ["Consider options", "Make a decision", "Implement"]
+      } as CallToActionSlideContent;
     }
 
     // Fallback for unknown slide types

@@ -38,18 +38,66 @@ export interface ThankYouSlideContent {
   message?: string; // Optional custom message
 }
 
+// New slide content types
+export interface ComparisonSlideContent {
+  title: string;
+  leftHeader: string;
+  rightHeader: string;
+  leftPoints: string[];
+  rightPoints: string[];
+}
+
+export interface StatisticsSlideContent {
+  title: string;
+  stats: Array<{
+    value: string;
+    description: string;
+  }>;
+}
+
+export interface TimelineSlideContent {
+  title: string;
+  events: Array<{
+    date: string;
+    description: string;
+  }>;
+}
+
+export interface DefinitionSlideContent {
+  term: string;
+  definition: string;
+  examples: string[];
+}
+
+export interface SectionSlideContent {
+  sectionTitle: string;
+  description: string;
+}
+
+export interface CallToActionSlideContent {
+  title: string;
+  mainAction: string;
+  steps: string[];
+}
+
 // Union type for slide content based on slide type
 export type SlideContent = 
   | ContentSlideContent 
   | QuoteSlideContent
   | TitleSlideContent
   | IndexSlideContent
-  | ThankYouSlideContent;
+  | ThankYouSlideContent
+  | ComparisonSlideContent
+  | StatisticsSlideContent
+  | TimelineSlideContent
+  | DefinitionSlideContent
+  | SectionSlideContent
+  | CallToActionSlideContent;
 
 // Presentation slide structure
 export interface PresentationSlide {
   SlideNumber: number;
-  slideType: 'title' | 'content' | 'quote' | 'index' | 'thankYou';
+  slideType: 'title' | 'content' | 'quote' | 'index' | 'thankYou' | 'comparison' | 'statistics' | 'timeline' | 'definition' | 'section' | 'callToAction';
   Title: string;
   Content: SlideContent;
 }

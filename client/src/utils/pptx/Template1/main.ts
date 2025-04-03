@@ -4,10 +4,16 @@ import { createContentSlide } from './content-slide';
 import { createQuoteSlide } from './quote-slide';
 import { createIndexSlide } from './index-slide';
 import { createThankYouSlide } from './thank-you-slide';
+import { createComparisonSlide } from './comparison-slide';
+import { createStatisticsSlide } from './statistics-slide';
+import { createTimelineSlide } from './timeline-slide';
+import { createDefinitionSlide } from './definition-slide';
+import { createSectionSlide } from './section-slide';
+import { createCallToActionSlide } from './call-to-action-slide';
 
 export interface Slide {
   SlideNumber: number;
-  slideType: 'title' | 'content' | 'quote' | 'index' | 'thankYou';
+  slideType: 'title' | 'content' | 'quote' | 'index' | 'thankYou' | 'comparison' | 'statistics' | 'timeline' | 'definition' | 'section' | 'callToAction';
   Title: string;
   Content: any; // This will be cast to the appropriate content type for each slide
 }
@@ -79,6 +85,36 @@ export const generatePowerPoint = async (presentationData: Presentation): Promis
           case 'thankYou':
             console.log('Creating thank you slide with content:', slide.Content);
             createThankYouSlide(pres, slide.Content);
+            break;
+            
+          case 'comparison':
+            console.log('Creating comparison slide with content:', slide.Content);
+            createComparisonSlide(pres, slide.Content);
+            break;
+            
+          case 'statistics':
+            console.log('Creating statistics slide with content:', slide.Content);
+            createStatisticsSlide(pres, slide.Content);
+            break;
+            
+          case 'timeline':
+            console.log('Creating timeline slide with content:', slide.Content);
+            createTimelineSlide(pres, slide.Content);
+            break;
+            
+          case 'definition':
+            console.log('Creating definition slide with content:', slide.Content);
+            createDefinitionSlide(pres, slide.Content);
+            break;
+            
+          case 'section':
+            console.log('Creating section slide with content:', slide.Content);
+            createSectionSlide(pres, slide.Content);
+            break;
+            
+          case 'callToAction':
+            console.log('Creating call to action slide with content:', slide.Content);
+            createCallToActionSlide(pres, slide.Content);
             break;
             
           default:

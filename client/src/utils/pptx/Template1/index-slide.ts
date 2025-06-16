@@ -2,6 +2,7 @@ import pptxgen from 'pptxgenjs';
 
 interface IndexSlideContent {
   items: string[];
+  speakNote?: string;
 }
 
 export const createIndexSlide = (pres: pptxgen, content: IndexSlideContent): void => {
@@ -89,4 +90,9 @@ export const createIndexSlide = (pres: pptxgen, content: IndexSlideContent): voi
     h: 0.2,
     fill: { color: accentColor }
   });
+
+  // Add speaker notes if present
+  if (content.speakNote && content.speakNote.trim() !== '') {
+    slide.addNotes(content.speakNote);
+  }
 };

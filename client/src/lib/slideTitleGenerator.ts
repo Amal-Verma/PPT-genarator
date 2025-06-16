@@ -1,5 +1,6 @@
 import { getGeminiResponse } from './gemini';
 import slideSchema from '../schemas/slideSchema';
+import { getTonePrompt } from '../schemas/toneSchema';
 
 /**
  * Generate presentation slide titles and types based on a prompt
@@ -7,14 +8,17 @@ import slideSchema from '../schemas/slideSchema';
  * @param {object} params - The parameters for the function
  * @param {string} params.prompt - The prompt describing the presentation topic
  * @param {number} params.numberOfSlides - The number of slides to generate titles for
+ * @param {string} params.tone - The tone of the presentation (optional, default is "professional")
  * @returns {Promise<{name: string, slides: Array<{title: string, type: string}>}>} - Presentation name and array of slide titles and types
  */
 export async function generateSlideTitles({ 
   prompt, 
-  numberOfSlides 
+  numberOfSlides,
+  tone = "professional"
 }: { 
   prompt: string, 
-  numberOfSlides: number 
+  numberOfSlides: number,
+  tone?: string
 }): Promise<{name: string, slides: Array<{title: string, type: string}>}> {
   // Get slide types and their prompt descriptions from the schema
   const slideTypes: Record<string, string> = {};
@@ -44,24 +48,30 @@ export async function generateSlideTitles({
     numberOfSlides - 3 : // Subtract 3 for title, index and thank you slides
     numberOfSlides - 2;  // Subtract 2 for title and thank you slides
   
+  const tonePrompt = getTonePrompt(tone);
+
   const generationPrompt = `
   I need to create a presentation about: "${prompt}"
-  
+
+  Tone: ${tonePrompt}
+
   First, provide a short, concise name/title that summarizes the entire presentation in 5-8 words.
-  
+
   Then, generate exactly ${contentSlidesCount} slide titles along with the slide type.
   Available slide types are: ${Object.keys(slideTypes).join(', ')}
-  
+
   Here's information about each slide type:
   ${titlePrompts}
-  
+
   IMPORTANT RULES:
   - Create a coherent presentation flow with a logical structure
   - Vary the slide types appropriately for better engagement
   - Ensure titles are clear, concise, and specific to the topic
   - Each slide title should be under 60 characters
   - Do NOT include any formatting, markdown, or explanations in your response
-  
+  - Do NOT wrap the response in code blocks or any other formatting
+  - Return a JSON object with the following structure:
+
   Format your response as a JSON object with a "name" field for the presentation title and a "slides" array:
   {
     "name": "Concise Presentation Title",
@@ -70,7 +80,7 @@ export async function generateSlideTitles({
       {"title": "Key Points", "type": "content"}
     ]
   }
-  
+
   Return ONLY the JSON object in your response, nothing else. No explanation, no markdown formatting.
   `;
   
@@ -91,12 +101,15 @@ export async function generateSlideTitles({
     const presentationName = parsedResponse.name || `Presentation about ${prompt}`;
     
     // Extract the slides
-    let generatedSlides = parsedResponse.slides || [];
+    const generatedSlides = parsedResponse.slides || [];
     
+    // Define a type for slide items
+    type SlideItem = { title?: string; type?: string };
+
     // Validate the slide structure
-    const validatedSlides = generatedSlides.map((item: any) => ({
+    const validatedSlides = generatedSlides.map((item: SlideItem) => ({
       title: item.title || "Untitled Slide",
-      type: Object.keys(slideTypes).includes(item.type) ? item.type : "content"
+      type: Object.keys(slideTypes).includes(item.type ?? "") ? item.type : "content"
     }));
     
     // Add title slide at the beginning

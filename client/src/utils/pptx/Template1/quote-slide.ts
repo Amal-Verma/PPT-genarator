@@ -3,6 +3,7 @@ import pptxgen from 'pptxgenjs';
 interface QuoteSlideContent {
   quote: string;
   author: string;
+  speakNote?: string;
 }
 
 export const createQuoteSlide = (pres: pptxgen, content: QuoteSlideContent): void => {
@@ -79,4 +80,9 @@ export const createQuoteSlide = (pres: pptxgen, content: QuoteSlideContent): voi
     h: 0.8,
     fill: { color: accentColor + '66' } // Semi-transparent
   });
+
+  // Add speaker notes if present
+  if (content.speakNote && content.speakNote.trim() !== '') {
+    slide.addNotes(content.speakNote);
+  }
 };

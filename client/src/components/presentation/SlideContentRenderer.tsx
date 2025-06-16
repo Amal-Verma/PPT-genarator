@@ -128,7 +128,7 @@ export default function SlideContentRenderer({ slide }: SlideContentRendererProp
               <div className="mr-4 bg-blue-600 text-white px-3 py-1 rounded font-semibold min-w-20 text-center">
                 {event.date}
               </div>
-              <div className="flex-1 pt-1 border-l-2 border-blue-200 pl-4 pb-4">
+              <div className="flex-1 pt-1 border-l-2 border-blue-200 pl-4 pb-4 text-black">
                 {event.description}
               </div>
             </div>

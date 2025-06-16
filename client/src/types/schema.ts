@@ -17,21 +17,25 @@ export interface SlideSchema {
 export interface ContentSlideContent {
   title: string;
   content: string[];
+  speakNote: string;
 }
 
 export interface QuoteSlideContent {
   author: string;
   quote: string;
+  speakNote: string;
 }
 
 // New slide content types
 export interface TitleSlideContent {
   mainTitle: string;
   subtitle: string;
+  speakNote: string;
 }
 
 export interface IndexSlideContent {
-  items: string[];
+  items: string[];  
+  speakNote: string;
 }
 
 export interface ThankYouSlideContent {
@@ -45,6 +49,7 @@ export interface ComparisonSlideContent {
   rightHeader: string;
   leftPoints: string[];
   rightPoints: string[];
+  speakNote: string;
 }
 
 export interface StatisticsSlideContent {
@@ -53,6 +58,7 @@ export interface StatisticsSlideContent {
     value: string;
     description: string;
   }>;
+  speakNote: string;
 }
 
 export interface TimelineSlideContent {
@@ -61,23 +67,27 @@ export interface TimelineSlideContent {
     date: string;
     description: string;
   }>;
+  speakNote: string;
 }
 
 export interface DefinitionSlideContent {
   term: string;
   definition: string;
   examples: string[];
+  speakNote: string;
 }
 
 export interface SectionSlideContent {
   sectionTitle: string;
   description: string;
+  speakNote: string;
 }
 
 export interface CallToActionSlideContent {
   title: string;
   mainAction: string;
   steps: string[];
+  speakNote: string;
 }
 
 // Union type for slide content based on slide type

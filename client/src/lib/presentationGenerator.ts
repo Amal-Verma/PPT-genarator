@@ -2,18 +2,11 @@ import { generateSlideContent } from './slideContentGenerator';
 import { 
   PresentationSlide, 
   SlideContent, 
-  ContentSlideContent, 
-  QuoteSlideContent,
-  TitleSlideContent,
-  IndexSlideContent,
-  ThankYouSlideContent,
-  ComparisonSlideContent,
-  StatisticsSlideContent,
-  TimelineSlideContent,
-  DefinitionSlideContent,
-  SectionSlideContent,
-  CallToActionSlideContent
+  ContentSlideContent
 } from '@/types/schema';
+import {
+  getDefaultSlideContent
+} from '../schemas/zodSchemas';
 
 /**
  * Generate a complete presentation from slide titles and types
@@ -28,11 +21,13 @@ export async function generatePresentation({
   presentationName,
   slides, 
   topic,
+  tone,
   onSlideGenerated
 }: { 
   presentationName: string;
   slides: Array<{ title: string; type: string }>;
   topic: string;
+  tone: string;
   onSlideGenerated?: (slide: PresentationSlide) => void;
 }): Promise<PresentationSlide[]> {
   const presentation: PresentationSlide[] = [];
@@ -53,7 +48,8 @@ export async function generatePresentation({
         title, 
         type, 
         topic,
-        slideTitlesString
+        slideTitlesString,
+        tone // pass tone to slide content generator
       });
       
       // Create the new slide
@@ -75,88 +71,19 @@ export async function generatePresentation({
     } catch (error) {
       console.error(`Failed to generate slide ${i + 1}:`, error);
       
-      // Create appropriate fallback content based on slide type
+      // Create appropriate fallback content based on slide type using Zod
       let fallbackContent: SlideContent;
       
-      switch(type) {
-        case 'content':
-          fallbackContent = { 
-            title: title, 
-            content: ['Content generation failed. Please try again.'] 
-          } as ContentSlideContent;
-          break;
-        case 'quote':
-          fallbackContent = { 
-            quote: 'Content generation failed', 
-            author: 'Error' 
-          } as QuoteSlideContent;
-          break;
-        case 'title':
-          fallbackContent = { 
-            mainTitle: topic || 'Presentation Title', 
-            subtitle: 'Content generation failed' 
-          } as TitleSlideContent;
-          break;
-        case 'index':
-          fallbackContent = { 
-            items: ['Failed to generate table of contents'] 
-          } as IndexSlideContent;
-          break;
-        case 'thankYou':
-          fallbackContent = { 
-            message: 'Thank you for your attention' 
-          } as ThankYouSlideContent;
-          break;
-        case 'comparison':
-          fallbackContent = {
-            title: title,
-            leftHeader: "Option A",
-            rightHeader: "Option B",
-            leftPoints: ["Content generation failed"],
-            rightPoints: ["Content generation failed"]
-          } as ComparisonSlideContent;
-          break;
-        case 'statistics':
-          fallbackContent = {
-            title: title,
-            stats: [
-              { value: "N/A", description: "Failed to generate statistics" }
-            ]
-          } as StatisticsSlideContent;
-          break;
-        case 'timeline':
-          fallbackContent = {
-            title: title,
-            events: [
-              { date: "N/A", description: "Failed to generate timeline" }
-            ]
-          } as TimelineSlideContent;
-          break;
-        case 'definition':
-          fallbackContent = {
-            term: title,
-            definition: "Failed to generate definition",
-            examples: ["Content generation failed"]
-          } as DefinitionSlideContent;
-          break;
-        case 'section':
-          fallbackContent = {
-            sectionTitle: title,
-            description: "Failed to generate section content"
-          } as SectionSlideContent;
-          break;
-        case 'callToAction':
-          fallbackContent = {
-            title: title,
-            mainAction: "Action Required",
-            steps: ["Failed to generate call to action steps"]
-          } as CallToActionSlideContent;
-          break;
-        default:
-          fallbackContent = { 
-            title: title, 
-            content: ['Content generation failed. Unknown slide type.'] 
-          } as ContentSlideContent;
+      try {
+        // Use getDefaultSlideContent for fallback content, no switch needed
+        fallbackContent = getDefaultSlideContent(type, title, topic);
+      } catch (zodError) {
+        console.error('Error creating fallback content with Zod:', zodError);
+        // Ultimate fallback if Zod validation fails
+        fallbackContent = {
+          title: title,
+          content: ['Emergency fallback content due to validation error.']
+        } as ContentSlideContent;
       }
       
       // Create placeholder slide with proper typing for content

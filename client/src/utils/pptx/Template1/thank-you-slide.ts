@@ -2,6 +2,7 @@ import pptxgen from 'pptxgenjs';
 
 interface ThankYouSlideContent {
   message: string;
+  speakNote?: string;
 }
 
 export const createThankYouSlide = (pres: pptxgen, content: ThankYouSlideContent): void => {
@@ -82,5 +83,10 @@ export const createThankYouSlide = (pres: pptxgen, content: ThankYouSlideContent
       fontFace: 'Arial',
       breakLine: true  // Allow text to wrap
     });
+  }
+
+  // Add speaker notes if present
+  if (content.speakNote && content.speakNote.trim() !== '') {
+    slide.addNotes(content.speakNote);
   }
 };

@@ -90,4 +90,9 @@ export const createComparisonSlide = (pres: pptxgen, content: ComparisonSlideCon
       color: '333333'
     });
   });
+
+  // Add speaker notes if present
+  if (content.speakNote && content.speakNote.trim() !== '') {
+    slide.addNotes(content.speakNote);
+  }
 };

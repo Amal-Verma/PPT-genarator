@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { PresentationSlide } from '@/types/schema';
 import DevJsonModal from '@/components/dev/DevJsonModal';
 import SlideContentRenderer from './SlideContentRenderer';
@@ -15,7 +15,7 @@ export default function PresentationContent({
   presentationName,
   slides, 
   onBackToOutline,
-  loadingSlides = [] // Default to empty array if not provided
+  loadingSlides = []
 }: PresentationContentProps) {
   const [isJsonModalOpen, setIsJsonModalOpen] = useState(false);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
@@ -29,7 +29,17 @@ export default function PresentationContent({
 
   // Get current slide
   const currentSlide = slides[currentSlideIndex];
-  
+
+  // Memoized speakNote extraction for current slide
+  const speakNote = useMemo(() => {
+    if (!currentSlide || !currentSlide.Content) return '';
+    // Try to find a speakNote property in the content
+    if (typeof currentSlide.Content === 'object' && 'speakNote' in currentSlide.Content) {
+      return (currentSlide.Content as {speakNote: string}).speakNote || '';
+    }
+    return '';
+  }, [currentSlide]);
+
   const handlePreviousSlide = () => {
     if (currentSlideIndex > 0) {
       setCurrentSlideIndex(currentSlideIndex - 1);
@@ -137,6 +147,15 @@ export default function PresentationContent({
             </>
           )}
         </div>
+        {/* Speak Note display moved outside the aspect-video box */}
+        {!isSlideLoading(currentSlide?.SlideNumber) && speakNote && (
+          <div className="mt-6 flex items-center justify-center">
+            <div className="bg-yellow-50 border border-yellow-300 rounded px-4 py-2 text-yellow-900 text-sm max-w-2xl w-full text-center shadow-sm">
+              <span className="font-semibold mr-2">Presenter Note:</span>
+              <span>{speakNote}</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Slide thumbnails/navigation */}
@@ -145,7 +164,7 @@ export default function PresentationContent({
           <div 
             key={slide.SlideNumber}
             onClick={() => setCurrentSlideIndex(index)}
-            className={`cursor-pointer p-2 rounded border ${currentSlideIndex === index ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-white'}`}
+            className={`cursor-pointer p-2 rounded border relative group ${currentSlideIndex === index ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-white'}`}
           >
             {isSlideLoading(slide.SlideNumber) ? (
               // Loading indicator for thumbnail
@@ -159,6 +178,12 @@ export default function PresentationContent({
                 <div className="text-gray-600">Slide {slide.SlideNumber}</div>
               </div>
             )}
+            {/* Slide type tooltip on hover */}
+            <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-10 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200">
+              <div className="bg-gray-900 text-white text-xs rounded px-2 py-1 shadow-lg whitespace-nowrap">
+                {slide.slideType}
+              </div>
+            </div>
           </div>
         ))}
       </div>

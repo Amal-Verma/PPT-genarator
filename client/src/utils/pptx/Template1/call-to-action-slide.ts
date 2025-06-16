@@ -75,4 +75,9 @@ export const createCallToActionSlide = (pres: pptxgen, content: CallToActionSlid
       color: '333333'
     });
   });
+
+  // Add speaker notes if present
+  if (content.speakNote && content.speakNote.trim() !== '') {
+    slide.addNotes(content.speakNote);
+  }
 };

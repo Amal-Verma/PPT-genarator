@@ -45,4 +45,9 @@ export const createSectionSlide = (pres: pptxgen, content: SectionSlideContent):
     align: 'center',
     valign: 'top'
   });
+
+  // Add speaker notes if present
+  if (content.speakNote && content.speakNote.trim() !== '') {
+    slide.addNotes(content.speakNote);
+  }
 };

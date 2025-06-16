@@ -3,6 +3,7 @@ import pptxgen from 'pptxgenjs';
 interface TitleSlideContent {
   mainTitle: string;
   subtitle: string;
+  speakNote?: string;
 }
 
 export const createTitleSlide = (pres: pptxgen, content: TitleSlideContent): void => {
@@ -67,4 +68,9 @@ export const createTitleSlide = (pres: pptxgen, content: TitleSlideContent): voi
     fill: { color: accentColor },
     rotate: 45
   });
+
+  // Add speaker notes if present
+  if (content.speakNote && content.speakNote.trim() !== '') {
+    slide.addNotes(content.speakNote);
+  }
 };

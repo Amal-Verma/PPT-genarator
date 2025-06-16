@@ -88,4 +88,9 @@ export const createTimelineSlide = (pres: pptxgen, content: TimelineSlideContent
       valign: 'middle'
     });
   });
+
+  // Add speaker notes if present
+  if (content.speakNote && content.speakNote.trim() !== '') {
+    slide.addNotes(content.speakNote);
+  }
 };

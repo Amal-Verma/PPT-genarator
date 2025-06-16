@@ -95,4 +95,9 @@ export const createStatisticsSlide = (pres: pptxgen, content: StatisticsSlideCon
       breakLine: true // Allow text to break into multiple lines
     });
   });
+
+  // Add speaker notes if present
+  if (content.speakNote && content.speakNote.trim() !== '') {
+    slide.addNotes(content.speakNote);
+  }
 };

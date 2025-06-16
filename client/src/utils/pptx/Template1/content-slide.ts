@@ -3,6 +3,7 @@ import pptxgen from 'pptxgenjs';
 interface ContentSlideContent {
   title: string;
   content: string[];
+  speakNote?: string;
 }
 
 export const createContentSlide = (pres: pptxgen, content: ContentSlideContent): void => {
@@ -91,4 +92,9 @@ export const createContentSlide = (pres: pptxgen, content: ContentSlideContent):
     h: 0.2,
     fill: { color: accentColor }
   });
+
+  // Add speaker notes if present
+  if (content.speakNote && content.speakNote.trim() !== '') {
+    slide.addNotes(content.speakNote);
+  }
 };

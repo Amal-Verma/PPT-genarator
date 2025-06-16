@@ -11,6 +11,7 @@ import PresentationOutline from '@/components/presentation/PresentationOutline';
 import PresentationContent from '@/components/presentation/PresentationContent';
 import ErrorAlert from '@/components/common/ErrorAlert';
 import { PresentationSlide } from '@/types/schema';
+import { toneOptions } from '@/schemas/toneSchema';
 
 interface SlideTitle {
   title: string;
@@ -27,6 +28,7 @@ export default function GeneratePage() {
   const [isGeneratingPresentation, setIsGeneratingPresentation] = useState<boolean>(false);
   const [presentation, setPresentation] = useState<PresentationSlide[] | null>(null);
   const [activeStep, setActiveStep] = useState<'outline' | 'presentation'>('outline');
+  const [selectedTone, setSelectedTone] = useState<string>(toneOptions[0].key);
   // New state to track which slides are currently loading
   const [loadingSlides, setLoadingSlides] = useState<number[]>([]);
 
@@ -50,7 +52,8 @@ export default function GeneratePage() {
       // Call the slide generator function directly from the client
       const result = await generateSlideTitles({
         prompt,
-        numberOfSlides
+        numberOfSlides,
+        tone: selectedTone
       });
       
       setPresentationName(result.name);
@@ -79,7 +82,7 @@ export default function GeneratePage() {
       // Use AI to summarize the topic
       const summarizedTopic = await summarizeTopic({
         topic: prompt,
-        maxLength: 150
+        maxLength: 450
       });
       
       // Generate the full presentation with incremental updates
@@ -87,6 +90,7 @@ export default function GeneratePage() {
         presentationName: presentationName,
         slides: generatedSlides,
         topic: summarizedTopic,
+        tone: selectedTone,
         onSlideGenerated: (newSlide) => {
           // Update presentation with the new slide
           setPresentation(prevSlides => {
@@ -131,6 +135,22 @@ export default function GeneratePage() {
         
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <h2 className="text-xl font-bold mb-4 text-gray-800">Generate Presentation Slides</h2>
+          {/* Tone selector */}
+          <div className="mb-4">
+            <label htmlFor="tone" className="block text-sm font-medium text-gray-700 mb-1">
+              Presentation Tone
+            </label>
+            <select
+              id="tone"
+              value={selectedTone}
+              onChange={e => setSelectedTone(e.target.value)}
+              className="block w-full border border-gray-300 rounded px-3 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {toneOptions.map(tone => (
+                <option key={tone.key} value={tone.key}>{tone.label}</option>
+              ))}
+            </select>
+          </div>
           <PresentationForm 
             prompt={prompt}
             setPrompt={setPrompt}

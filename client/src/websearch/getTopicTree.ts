@@ -48,6 +48,7 @@ export async function* getTopicTreeStream(
       yield { node, path: [...path, i] };
       // Recursively yield subnodes
       if (subTopic.expand){
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Throttle to avoid rate limits
         for await (const sub of helper(
           mainPrompt,
           `Topic: ${subTopic.subTopic}\nDescription: ${subTopic.description}`,

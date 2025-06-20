@@ -29,10 +29,10 @@ export default function Home() {
           Generate Presentation
         </Link>
         <Link
-          href="/websearch"
+          href="/notes"
           className="flex-1 px-6 py-4 bg-white border border-blue-200 text-blue-700 rounded-lg shadow-lg text-xl font-semibold text-center hover:bg-blue-50 transition"
         >
-          Web Search
+          Notes
         </Link>
         <Link
           href="/chat"

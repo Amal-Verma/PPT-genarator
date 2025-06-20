@@ -28,7 +28,7 @@ export default function ChatBot() {
     
     try {
       // Get response from Gemini (each call is independent with no memory)
-      const response = await getGeminiResponse(userInput);
+      const response = await getGeminiResponse(userInput, false);
       
       // Add assistant response to chat
       const assistantMessage: Message = { role: "assistant", content: response };

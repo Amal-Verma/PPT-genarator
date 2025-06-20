@@ -10,9 +10,9 @@
  * @param {Function} [options.onFail] - Callback function executed when all retries fail
  * @returns {Promise<T>} - Result of the function execution
  */
-export async function withRetry<T>(
-  fn: (...args: any[]) => Promise<T>,
-  args: any[] = [],
+export async function withRetry<T, A extends unknown[]>(
+  fn: (...args: A) => Promise<T>,
+  args: A = [] as unknown as A,
   options: {
     maxRetries?: number;
     delay?: number;

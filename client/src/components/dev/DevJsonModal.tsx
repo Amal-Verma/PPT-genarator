@@ -4,7 +4,7 @@ interface DevJsonModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  data: any;
+  data: unknown;
 }
 
 export default function DevJsonModal({ isOpen, onClose, title, data }: DevJsonModalProps) {

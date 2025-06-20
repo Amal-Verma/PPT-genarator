@@ -191,7 +191,6 @@ export function getDefaultSlideContent(type: string, title: string, topic?: stri
     case 'index':
       return indexSlideSchema.parse({ ...slideDefaults.index });
     case 'thankyou':
-    case 'thankyou':
       return thankYouSlideSchema.parse({ ...slideDefaults.thankYou });
     case 'content':
       return contentSlideSchema.parse({

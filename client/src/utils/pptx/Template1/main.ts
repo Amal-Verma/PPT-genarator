@@ -10,12 +10,13 @@ import { createTimelineSlide } from './timeline-slide';
 import { createDefinitionSlide } from './definition-slide';
 import { createSectionSlide } from './section-slide';
 import { createCallToActionSlide } from './call-to-action-slide';
+import { CallToActionSlideContent, ComparisonSlideContent, ContentSlideContent, DefinitionSlideContent, IndexSlideContent, QuoteSlideContent, SectionSlideContent, SlideContent, StatisticsSlideContent, TimelineSlideContent, TitleSlideContent } from '@/types/schema';
 
 export interface Slide {
   SlideNumber: number;
   slideType: 'title' | 'content' | 'quote' | 'index' | 'thankYou' | 'comparison' | 'statistics' | 'timeline' | 'definition' | 'section' | 'callToAction';
   Title: string;
-  Content: any; // This will be cast to the appropriate content type for each slide
+  Content: SlideContent; // This will be cast to the appropriate content type for each slide
 }
 
 export interface Presentation {
@@ -60,61 +61,62 @@ export const generatePowerPoint = async (presentationData: Presentation): Promis
         switch(slide.slideType) {
           case 'title':
             console.log('Creating title slide with content:', slide.Content);
-            createTitleSlide(pres, slide.Content);
+            createTitleSlide(pres, slide.Content as TitleSlideContent);
             break;
             
           case 'content':
             console.log('Creating content slide with content:', slide.Content);
-            createContentSlide(pres, slide.Content);
+            createContentSlide(pres, slide.Content as ContentSlideContent);
             break;
             
           case 'quote':
             console.log('Creating quote slide with content:', slide.Content);
-            createQuoteSlide(pres, slide.Content);
+            createQuoteSlide(pres, slide.Content as QuoteSlideContent);
             break;
             
           case 'index':
             console.log('Creating index slide');
             // For index slides, use either provided items or generated index
             const indexContent = {
-              items: slide.Content?.items || indexItems
+              items: (slide.Content as IndexSlideContent)?.items || indexItems
             };
             createIndexSlide(pres, indexContent);
             break;
             
           case 'thankYou':
             console.log('Creating thank you slide with content:', slide.Content);
+            // @ts-expect-error: ThankYouSlideContent type is not strictly enforced here
             createThankYouSlide(pres, slide.Content);
             break;
             
           case 'comparison':
             console.log('Creating comparison slide with content:', slide.Content);
-            createComparisonSlide(pres, slide.Content);
+            createComparisonSlide(pres, slide.Content as ComparisonSlideContent);
             break;
             
           case 'statistics':
             console.log('Creating statistics slide with content:', slide.Content);
-            createStatisticsSlide(pres, slide.Content);
+            createStatisticsSlide(pres, slide.Content as StatisticsSlideContent);
             break;
             
           case 'timeline':
             console.log('Creating timeline slide with content:', slide.Content);
-            createTimelineSlide(pres, slide.Content);
+            createTimelineSlide(pres, slide.Content as TimelineSlideContent);
             break;
             
           case 'definition':
             console.log('Creating definition slide with content:', slide.Content);
-            createDefinitionSlide(pres, slide.Content);
+            createDefinitionSlide(pres, slide.Content as DefinitionSlideContent);
             break;
             
           case 'section':
             console.log('Creating section slide with content:', slide.Content);
-            createSectionSlide(pres, slide.Content);
+            createSectionSlide(pres, slide.Content as SectionSlideContent);
             break;
             
           case 'callToAction':
             console.log('Creating call to action slide with content:', slide.Content);
-            createCallToActionSlide(pres, slide.Content);
+            createCallToActionSlide(pres, slide.Content as CallToActionSlideContent);
             break;
             
           default:

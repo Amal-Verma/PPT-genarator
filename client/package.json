@@ -9,12 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google/genai": "^1.5.1",
     "@google/generative-ai": "^0.24.0",
+    "axios": "^1.10.0",
+    "cheerio": "^1.1.0",
     "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.1",
+    "marked": "^15.0.12",
     "next": "15.2.4",
     "pptxgenjs": "^3.12.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-markdown": "^10.1.0",
     "yaml-loader": "^0.8.0",
     "zod": "^3.24.2"
   },

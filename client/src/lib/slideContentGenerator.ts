@@ -42,7 +42,7 @@ async function generateSlideContentNoRetry({
       // Use parseSlideContent for consistency
       return parseSlideContent(
         JSON.stringify({
-          message: `Thank you for attending this presentation on ${topic}!`,
+          message: `Thank you for attending this presentation!`,
           speakNote: ""
         }),
         "thankYou"
@@ -62,7 +62,7 @@ async function generateSlideContentNoRetry({
 IMPORTANT RULES:
 - Return your response in proper JSON format according to the schema provided
 - Do NOT include any markdown formatting in your content
-- Di NOT wrap your response in a code block
+- Do NOT wrap your response in a code block
 - Keep information focused, clear, and relevant to the topic
 - Do NOT include any explanation or comments outside of the JSON structure
 - Always include all required fields in your JSON response

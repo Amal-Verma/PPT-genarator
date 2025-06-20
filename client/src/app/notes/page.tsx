@@ -7,6 +7,14 @@ import { TopicTreeNode } from '@/websearch/type';
 import ReactMarkdown from 'react-markdown';
 import { jsPDF } from 'jspdf';
 
+// Constants for input limits
+const MIN_NUM_RESULTS = 1;
+const MAX_NUM_RESULTS = 200;
+const MIN_MAX_DEPTH = 1;
+const MAX_MAX_DEPTH = 5;
+const MIN_BREATH = 1;
+const MAX_BREATH = 10;
+
 export default function TopicTreePage() {
   const [query, setQuery] = useState('');
   const [numResults, setNumResults] = useState(7);
@@ -28,7 +36,7 @@ export default function TopicTreePage() {
     let current = tree;
     for (let i = 0; i < path.length - 1; i++) {
       if (!current.subTopics[path[i]]) {
-        current.subTopics[path[i]] = { topic: '', description: '', content: '', subTopics: [] };
+        current.subTopics[path[i]] = { topic: '', description: '', content: '', subTopics: [], webSearch: false };
       }
       current = current.subTopics[path[i]];
     }
@@ -101,8 +109,8 @@ export default function TopicTreePage() {
           <label className="font-semibold text-gray-700">Num Results
             <input
               type="number"
-              min={1}
-              max={10}
+              min={MIN_NUM_RESULTS}
+              max={MAX_NUM_RESULTS}
               className="border px-3 py-2 rounded shadow-sm w-full mt-1"
               value={numResults}
               onChange={e => setNumResults(Number(e.target.value))}
@@ -112,8 +120,8 @@ export default function TopicTreePage() {
           <label className="font-semibold text-gray-700">Max Depth
             <input
               type="number"
-              min={1}
-              max={5}
+              min={MIN_MAX_DEPTH}
+              max={MAX_MAX_DEPTH}
               className="border px-3 py-2 rounded shadow-sm w-full mt-1"
               value={maxDepth}
               onChange={e => setMaxDepth(Number(e.target.value))}
@@ -123,8 +131,8 @@ export default function TopicTreePage() {
           <label className="font-semibold text-gray-700">Breath
             <input
               type="number"
-              min={1}
-              max={10}
+              min={MIN_BREATH}
+              max={MAX_BREATH}
               className="border px-3 py-2 rounded shadow-sm w-full mt-1"
               value={breath}
               onChange={e => setBreath(Number(e.target.value))}

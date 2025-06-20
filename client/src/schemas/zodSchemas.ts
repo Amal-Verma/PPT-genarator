@@ -1,33 +1,33 @@
 import { z } from 'zod';
 
+const commonSlideSchema = z.object({
+  speakNote: z.string().default(""),
+  // webSearch: z.boolean().default(false) // Uncomment if you want this in all slides
+});
+
 // Basic slide content types
 export const contentSlideSchema = z.object({
   title: z.string(),
-  content: z.array(z.string()),
-  speakNote: z.string()
-});
+  content: z.array(z.string())
+}).merge(commonSlideSchema);
 
 export const quoteSlideSchema = z.object({
   quote: z.string(),
-  author: z.string(),
-  speakNote: z.string()
-});
+  author: z.string()
+}).merge(commonSlideSchema);
 
 export const titleSlideSchema = z.object({
   mainTitle: z.string(),
-  subtitle: z.string(),
-  speakNote: z.string()
-});
+  subtitle: z.string()
+}).merge(commonSlideSchema);
 
 export const indexSlideSchema = z.object({
-  items: z.array(z.string()),
-  speakNote: z.string()
-});
+  items: z.array(z.string())
+}).merge(commonSlideSchema);
 
 export const thankYouSlideSchema = z.object({
-  message: z.string().optional().default("Thank you for your attention!"),
-  speakNote: z.string()
-});
+  message: z.string().optional().default("Thank you for your attention!")
+}).merge(commonSlideSchema);
 
 // Advanced slide content types
 export const comparisonSlideSchema = z.object({
@@ -35,72 +35,61 @@ export const comparisonSlideSchema = z.object({
   leftHeader: z.string(),
   rightHeader: z.string(),
   leftPoints: z.array(z.string()),
-  rightPoints: z.array(z.string()),
-  speakNote: z.string()
-});
+  rightPoints: z.array(z.string())
+}).merge(commonSlideSchema);
 
 export const statisticsSlideSchema = z.object({
   title: z.string(),
   stats: z.array(z.object({
     value: z.string(),
     description: z.string()
-  })),
-  speakNote: z.string()
-});
+  }))
+}).merge(commonSlideSchema);
 
 export const timelineSlideSchema = z.object({
   title: z.string(),
   events: z.array(z.object({
     date: z.string(),
     description: z.string()
-  })),
-  speakNote: z.string()
-});
+  }))
+}).merge(commonSlideSchema);
 
 export const definitionSlideSchema = z.object({
   term: z.string(),
   definition: z.string(),
-  examples: z.array(z.string()),
-  speakNote: z.string()
-});
+  examples: z.array(z.string())
+}).merge(commonSlideSchema);
 
 export const sectionSlideSchema = z.object({
   sectionTitle: z.string(),
-  description: z.string(),
-  speakNote: z.string()
-});
+  description: z.string()
+}).merge(commonSlideSchema);
 
 export const callToActionSlideSchema = z.object({
   title: z.string(),
   mainAction: z.string(),
-  steps: z.array(z.string()),
-  speakNote: z.string()
-});
+  steps: z.array(z.string())
+}).merge(commonSlideSchema);
 
 // Default/fallback values for each slide type
 export const slideDefaults = {
   content: {
     title: "Content Slide",
     content: ['Content generation failed. Please try again.'],
-    speakNote: ""
   },
   quote: {
     quote: "Content generation failed. Please try again.",
     author: "System",
-    speakNote: ""
   },
   title: {
     mainTitle: "Presentation Title",
     subtitle: "Presentation Overview",
-    speakNote: ""
   },
   index: {
     items: ["Main Points", "Key Concepts", "Analysis", "Conclusion"],
-    speakNote: ""
   },
   thankYou: {
     message: "Thank you for your attention!",
-    speakNote: ""
   },
   comparison: {
     title: "Comparison",
@@ -108,7 +97,6 @@ export const slideDefaults = {
     rightHeader: "Option B",
     leftPoints: ["Feature 1", "Feature 2", "Feature 3"],
     rightPoints: ["Feature 1", "Feature 2", "Feature 3"],
-    speakNote: ""
   },
   statistics: {
     title: "Key Statistics",
@@ -116,7 +104,6 @@ export const slideDefaults = {
       { value: "75%", description: "Example statistic" },
       { value: "2x", description: "Example growth metric" }
     ],
-    speakNote: ""
   },
   timeline: {
     title: "Timeline",
@@ -124,24 +111,20 @@ export const slideDefaults = {
       { date: "2020", description: "Initial event" },
       { date: "2022", description: "Latest development" }
     ],
-    speakNote: ""
   },
   definition: {
     term: "Term",
     definition: "Default definition text",
     examples: ["Example 1", "Example 2"],
-    speakNote: ""
   },
   section: {
     sectionTitle: "New Section",
     description: "This section covers important aspects of the topic",
-    speakNote: ""
   },
   callToAction: {
     title: "Call to Action",
     mainAction: "Take the next step",
     steps: ["Consider options", "Make a decision", "Implement"],
-    speakNote: ""
   }
 };
 

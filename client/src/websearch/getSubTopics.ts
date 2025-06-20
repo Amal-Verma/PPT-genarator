@@ -23,6 +23,7 @@ structure:
     "subTopic": "string", // The Title of the subtopic
     "description": "string" // A brief description of the subtopic
     "expand": boolean // Whether to expand this subtopic further (true/false) [note: only true when the subtopic can be further explored into meaningful subsubtopics for crash course]
+    "webSearch": boolean // Whether to perform web search for this subtopic (true/false) [note: only true when the subtopic is not well known or needs more research]
   },
   ...]
 `;
@@ -57,7 +58,8 @@ ${formatPrompt}`
     return data.map(item => ({
       subTopic: item.subTopic.trim(),
       description: item.description.trim(),
-      expand: item.expand !== undefined ? item.expand : true // Default to true if not provided
+      expand: item.expand !== undefined ? item.expand : true, // Default to true if not provided
+      webSearch: item.webSearch !== undefined ? item.webSearch : false // Default to false if not provided
     }));
 
   } catch (error) {

@@ -164,7 +164,9 @@ export default function PresentationContent({
           <div 
             key={slide.SlideNumber}
             onClick={() => setCurrentSlideIndex(index)}
-            className={`cursor-pointer p-2 rounded border relative group ${currentSlideIndex === index ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-white'}`}
+            className={`cursor-pointer p-2 rounded border relative group 
+              ${slide.webSearch ? 'border-yellow-400 bg-yellow-100' : currentSlideIndex === index ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-white'}
+            `}
           >
             {isSlideLoading(slide.SlideNumber) ? (
               // Loading indicator for thumbnail
@@ -206,7 +208,7 @@ export default function PresentationContent({
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
           )}
-          {isExporting ? 'Exporting...' : 'Export Presentation'}
+          {isExporting ? 'Downloading...' : 'Download Presentation'}
         </button>
 
         <button

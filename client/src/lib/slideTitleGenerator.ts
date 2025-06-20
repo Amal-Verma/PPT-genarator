@@ -2,6 +2,8 @@ import { getGeminiResponse } from './gemini';
 import slideSchema from '../schemas/slideSchema';
 import { getTonePrompt } from '../schemas/toneSchema';
 
+import { PresentationTitle } from '@/types/schema';
+
 /**
  * Generate presentation slide titles and types based on a prompt
  * 
@@ -19,13 +21,13 @@ export async function generateSlideTitles({
   prompt: string, 
   numberOfSlides: number,
   tone?: string
-}): Promise<{name: string, slides: Array<{title: string, type: string}>}> {
+}): Promise<{name: string, slides: Array<PresentationTitle>}> {
   // Get slide types and their prompt descriptions from the schema
   const slideTypes: Record<string, string> = {};
   
   for (const [type, config] of Object.entries(slideSchema.slides)) {
     // Skip title and thankYou slide types as these will be added automatically
-    if (type !== 'title' && type !== 'thankYou' && config['title-Prompt']) {
+    if (type !== 'title' && type !== 'thankYou' && type != 'index' && config['title-Prompt']) {
       slideTypes[type] = config['title-Prompt'];
     }
   }
@@ -76,10 +78,23 @@ export async function generateSlideTitles({
   {
     "name": "Concise Presentation Title",
     "slides": [
-      {"title": "Introduction to AI", "type": "content"},
-      {"title": "Key Points", "type": "content"}
+      {
+        "title": "Introduction to AI",
+        "type": "content"
+        "webSearch": false
+      },
+      {
+        "title": "Key Points", 
+        "type": "content",
+        "webSearch": false
+      },
+      ...
     ]
   }
+
+  IMPORTANT: Set the "webSearch" field to true for slides that require additional research or web search, and false for those that do not.
+  Example: use webSearch: true for slides that need statistics or specific data that may not be common knowledge.
+  All Fields are required.
 
   Return ONLY the JSON object in your response, nothing else. No explanation, no markdown formatting.
   `;
@@ -102,34 +117,37 @@ export async function generateSlideTitles({
     
     // Extract the slides
     const generatedSlides = parsedResponse.slides || [];
-    
-    // Define a type for slide items
-    type SlideItem = { title?: string; type?: string };
 
     // Validate the slide structure
-    const validatedSlides = generatedSlides.map((item: SlideItem) => ({
+    const validatedSlides = generatedSlides.map((item: Partial<PresentationTitle>) => ({
       title: item.title || "Untitled Slide",
-      type: Object.keys(slideTypes).includes(item.type ?? "") ? item.type : "content"
+      type: Object.keys(slideTypes).includes(item.type ?? "") ? item.type : "content",
+      webSearch: item.webSearch !== undefined ? item.webSearch : false
     }));
     
     // Add title slide at the beginning
     const slides = [
       {
         title: "Title",
-        type: "title"
+        type: "title",
+        webSearch: false
       },
       // Conditionally add index slide if presentation has 10 or more slides
       ...(hasIndexSlide ? [{
         title: "Table of Contents",
-        type: "index"
+        type: "index",
+        webSearch: false
       }] : []),
       ...validatedSlides,
       // Add thank you slide at the end
       {
         title: "Thank You",
-        type: "thankYou"
+        type: "thankYou",
+        webSearch: false
       }
     ];
+
+    console.log("Generated slide titles:", slides);
     
     return {
       name: presentationName,
@@ -140,16 +158,17 @@ export async function generateSlideTitles({
     // Return a default response in case of error
     const defaultSlides = Array(contentSlidesCount).fill(null).map((_, i) => ({
       title: `Slide ${i + 1}`,
-      type: "content"
+      type: "content",
+      webSearch: false
     }));
     
     return {
       name: `Presentation about ${prompt}`,
       slides: [
-        { title: "Title", type: "title" },
-        ...(hasIndexSlide ? [{ title: "Table of Contents", type: "index" }] : []),
+        { title: "Title", type: "title", webSearch: false },
+        ...(hasIndexSlide ? [{ title: "Table of Contents", type: "index", webSearch: false }] : []),
         ...defaultSlides,
-        { title: "Thank You", type: "thankYou" }
+        { title: "Thank You", type: "thankYou", webSearch: false}
       ]
     };
   }

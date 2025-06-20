@@ -7,6 +7,12 @@ export interface SlideConfig {
   'format-Prompt': string; // New field for format prompts
 }
 
+export type PresentationTitle = {
+  title: string, 
+  type: string,
+  webSearch: boolean
+}
+
 export interface SlideSchema {
   slides: {
     [key: string]: SlideConfig;
@@ -17,25 +23,21 @@ export interface SlideSchema {
 export interface ContentSlideContent {
   title: string;
   content: string[];
-  speakNote: string;
 }
 
 export interface QuoteSlideContent {
   author: string;
   quote: string;
-  speakNote: string;
 }
 
 // New slide content types
 export interface TitleSlideContent {
   mainTitle: string;
   subtitle: string;
-  speakNote: string;
 }
 
 export interface IndexSlideContent {
   items: string[];  
-  speakNote: string;
 }
 
 export interface ThankYouSlideContent {
@@ -49,7 +51,6 @@ export interface ComparisonSlideContent {
   rightHeader: string;
   leftPoints: string[];
   rightPoints: string[];
-  speakNote: string;
 }
 
 export interface StatisticsSlideContent {
@@ -58,7 +59,6 @@ export interface StatisticsSlideContent {
     value: string;
     description: string;
   }>;
-  speakNote: string;
 }
 
 export interface TimelineSlideContent {
@@ -67,32 +67,28 @@ export interface TimelineSlideContent {
     date: string;
     description: string;
   }>;
-  speakNote: string;
 }
 
 export interface DefinitionSlideContent {
   term: string;
   definition: string;
   examples: string[];
-  speakNote: string;
 }
 
 export interface SectionSlideContent {
   sectionTitle: string;
   description: string;
-  speakNote: string;
 }
 
 export interface CallToActionSlideContent {
   title: string;
   mainAction: string;
   steps: string[];
-  speakNote: string;
 }
 
 // Union type for slide content based on slide type
-export type SlideContent = 
-  | ContentSlideContent 
+export type SlideContent = (
+  ContentSlideContent 
   | QuoteSlideContent
   | TitleSlideContent
   | IndexSlideContent
@@ -102,7 +98,11 @@ export type SlideContent =
   | TimelineSlideContent
   | DefinitionSlideContent
   | SectionSlideContent
-  | CallToActionSlideContent;
+  | CallToActionSlideContent
+) & {
+  speakNote: string;
+  // webSearch: boolean; // Optional field for web search
+};
 
 // Presentation slide structure
 export interface PresentationSlide {
@@ -110,6 +110,7 @@ export interface PresentationSlide {
   slideType: 'title' | 'content' | 'quote' | 'index' | 'thankYou' | 'comparison' | 'statistics' | 'timeline' | 'definition' | 'section' | 'callToAction';
   Title: string;
   Content: SlideContent;
+  webSearch: boolean; // Optional field for web search
 }
 
 // New interface for overall presentation structure

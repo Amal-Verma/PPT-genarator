@@ -13,10 +13,7 @@ import ErrorAlert from '@/components/common/ErrorAlert';
 import { PresentationSlide } from '@/types/schema';
 import { toneOptions } from '@/schemas/toneSchema';
 
-interface SlideTitle {
-  title: string;
-  type: string;
-}
+import { PresentationTitle } from '@/types/schema';
 
 export default function GeneratePage() {
   const [prompt, setPrompt] = useState<string>('');
@@ -24,7 +21,7 @@ export default function GeneratePage() {
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [presentationName, setPresentationName] = useState<string>('');
-  const [generatedSlides, setGeneratedSlides] = useState<SlideTitle[] | null>(null);
+  const [generatedSlides, setGeneratedSlides] = useState<PresentationTitle[] | null>(null);
   const [isGeneratingPresentation, setIsGeneratingPresentation] = useState<boolean>(false);
   const [presentation, setPresentation] = useState<PresentationSlide[] | null>(null);
   const [activeStep, setActiveStep] = useState<'outline' | 'presentation'>('outline');

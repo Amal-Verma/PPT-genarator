@@ -3,20 +3,26 @@ import { extractInfos } from "./extract_info"
 
 import { getGeminiResponse } from "@/lib/gemini";
 
-const getResearchSummaries = async (topic: string, breath: number = 2): Promise<string[]> => {
+export const getResearchSummaries = async (topic: string, breath: number = 2): Promise<string[]> => {
   const searchResults = await webSearch(topic, breath);
   const contents = searchResults.map(result => result.content);
   return extractInfos(topic, contents, 100);
 }
 
 
-export const generateContent = async (topic: string, description: string,breath: number = 2): Promise<string> => {
+export const generateContent = async (topic: string, description: string,breath: number = 2, webSearch: boolean): Promise<string> => {
   try {
-    const summaries = await getResearchSummaries(topic, breath);
+    let summaries: string[] = [];
+
+    if (webSearch) {
+      // If web search is enabled, fetch summaries from the web
+      summaries = await getResearchSummaries(topic, breath);
+    }
+    
     const context = `You are an expert researcher and teacher. Your task is to generate a comprehensive and coherent content piece based on the following summaries. Focus on synthesizing the information into a well-structured narrative that covers the main points and insights from the research.
     Topic: "${topic}"
     Description: "${description}"
-    Summaries: ${summaries.join("\n\n")}
+    ${summaries.length? `Summaries: ${summaries.join("\n\n")}`: ``}
     Ensure that the content is clear, concise, and relevant to the topic at hand. Avoid including any extraneous details or personal opinions.
     Provide Expert-level insights and ensure that the content is suitable for an audience seeking in-depth knowledge on the topic.
     Provide examples where possible to enhance understanding.

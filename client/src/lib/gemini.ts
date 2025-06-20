@@ -78,8 +78,8 @@ export async function getGeminiResponse(prompt: string, isJson: boolean = true):
         outputText = extractJsonFromResponse(outputText);
       }
 
-      console.log("Prompt:", prompt);
-      console.log("Response:", outputText);
+      // console.log("Prompt:", prompt);
+      // console.log("Response:", outputText);
 
       // Return the text response
       return outputText;

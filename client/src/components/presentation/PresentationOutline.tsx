@@ -1,13 +1,9 @@
 import React from 'react';
-
-interface SlideTitle {
-  title: string;
-  type: string;
-}
+import { PresentationTitle } from '@/types/schema';
 
 interface PresentationOutlineProps {
   presentationName: string;
-  slides: SlideTitle[];
+  slides: PresentationTitle[];
   onStartOver: () => void;
   onCreatePresentation: () => void;
   isGenerating: boolean;
@@ -36,17 +32,16 @@ export default function PresentationOutline({
       
       <ul className="space-y-4 mb-8">
         {slides.map((slide, index) => (
-          <li key={index} className="p-4 border border-gray-200 hover:border-blue-200 rounded-md transition bg-white hover:bg-blue-50">
-            <div className="flex items-start">
-              <span className="bg-blue-100 text-blue-800 rounded-full w-7 h-7 flex items-center justify-center mr-3 font-medium shrink-0">
-                {index + 1}
+          <li key={index} className={`p-4 border rounded-md transition bg-white hover:bg-blue-50 flex items-start \
+            ${slide.webSearch ? 'border-yellow-400 bg-yellow-100' : 'border-gray-200 hover:border-blue-200'}\n`}>
+            <span className="bg-blue-100 text-blue-800 rounded-full w-7 h-7 flex items-center justify-center mr-3 font-medium shrink-0">
+              {index + 1}
+            </span>
+            <div>
+              <h3 className="font-bold text-gray-900">{slide.title}</h3>
+              <span className="inline-block mt-1 text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-md font-medium uppercase">
+                {slide.type}
               </span>
-              <div>
-                <h3 className="font-bold text-gray-900">{slide.title}</h3>
-                <span className="inline-block mt-1 text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-md font-medium uppercase">
-                  {slide.type}
-                </span>
-              </div>
             </div>
           </li>
         ))}

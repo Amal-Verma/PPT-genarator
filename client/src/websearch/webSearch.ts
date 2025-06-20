@@ -6,6 +6,7 @@ import * as cheerio from "cheerio";
 import { SearchResult } from "./type";
 
 export async function webSearch(query: string, numResults = 5): Promise<SearchResult[]> {
+  console.log(`🔍 Searching for: ${query} (Results: ${numResults})`);
   try{
     const url = "https://www.googleapis.com/customsearch/v1";
     
@@ -19,6 +20,8 @@ export async function webSearch(query: string, numResults = 5): Promise<SearchRe
         num: numResults
       }
     });
+
+    console.log(`🔍 Search results received for query`, res.data.item, query);
   
     return res.data.items
     ? await Promise.all(
@@ -30,6 +33,8 @@ export async function webSearch(query: string, numResults = 5): Promise<SearchRe
       : [];
   }
   catch {
+    console.log(`⚠️ Failed to perform web search for query: ${query}`);
+    console.warn(`⚠️ Failed to perform web search for query: ${query}`);
     return [];
   }
 }

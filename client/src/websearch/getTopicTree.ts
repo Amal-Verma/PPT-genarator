@@ -35,7 +35,8 @@ export async function* getTopicTreeStream(
       const content = await generateContent(
         subTopic.subTopic,
         subTopic.description,
-        breath
+        breath,
+        subTopic.webSearch
       );
       // Create the node
       const node: TopicTreeNode = {
@@ -43,6 +44,7 @@ export async function* getTopicTreeStream(
         description: subTopic.description,
         content,
         subTopics: [],
+        webSearch: subTopic.webSearch,
       };
       // Yield the node with its path in the tree
       yield { node, path: [...path, i] };
@@ -64,12 +66,13 @@ export async function* getTopicTreeStream(
   }
 
   // Generate content for the root node
-  const rootContent = await generateContent(query, "", breath);
+  // const rootContent = await generateContent(query, "", breath);
   const root: TopicTreeNode = {
     topic: query,
     description: "",
-    content: rootContent,
+    content: "",
     subTopics: [],
+    webSearch: false, // Root node does not perform web search
   };
   // Yield the root node at path []
   yield { node: root, path: [] };

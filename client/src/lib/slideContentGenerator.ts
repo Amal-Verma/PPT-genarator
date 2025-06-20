@@ -2,7 +2,6 @@ import { getGeminiResponse } from './gemini';
 import slideSchema from '../schemas/slideSchema';
 import { 
   SlideContent, 
-  ContentSlideContent,
   // TitleSlideContent,
   // IndexSlideContent
 } from '@/types/schema';
@@ -12,6 +11,7 @@ import {
   getDefaultSlideContent
 } from '../schemas/zodSchemas';
 import { getTonePrompt } from '../schemas/toneSchema';
+import { getResearchSummaries } from '@/websearch/generateContent';
 
 /**
  * Generate content for a slide based on its type and title
@@ -19,7 +19,7 @@ import { getTonePrompt } from '../schemas/toneSchema';
  * @param {object} params - The parameters for content generation
  * @param {string} params.title - The slide title
  * @param {string} params.type - The slide type
- * @param {string} params.topic - The overall presentation topic
+ * @param {string} params.topic - Summarized user prompt for the presentation topic
  * @returns {Promise<SlideContent>} - Generated content for the slide
  */
 async function generateSlideContentNoRetry({ 
@@ -28,7 +28,8 @@ async function generateSlideContentNoRetry({
   type, 
   topic,
   slideTitlesString,
-  tone
+  tone,
+  webSearch
 }: { 
   presentationName: string;
   title: string; 
@@ -36,6 +37,7 @@ async function generateSlideContentNoRetry({
   topic: string;
   slideTitlesString: string; 
   tone: string;
+  webSearch: boolean;
 }): Promise<SlideContent> {
   try {
     if (type === "thankYou") {
@@ -43,7 +45,7 @@ async function generateSlideContentNoRetry({
       return parseSlideContent(
         JSON.stringify({
           message: `Thank you for attending this presentation!`,
-          speakNote: ""
+          speakNote: "",
         }),
         "thankYou"
       );
@@ -67,9 +69,16 @@ IMPORTANT RULES:
 - Do NOT include any explanation or comments outside of the JSON structure
 - Always include all required fields in your JSON response
 - Content should be professional and suitable for a business presentation
-- Limit content to what can comfortably fit on a single slide
-`;
-    
+- Limit content to what can comfortably fit on a single slide`;
+
+    console.log("Checking web search field:", webSearch);
+
+    let webSearchPrompt = '';
+    if (webSearch) {
+      // console.log(`Generating web search results for slide "${title}" (${type})...`);
+      webSearchPrompt = (await getResearchSummaries(title, 3)).join('\n\n');
+      // console.log("Web search results generated successfully.", webSearchPrompt);
+    }
     // Replace placeholders in the content prompt and add common rules
     const contentPrompt = `
 ${slideType['content-Prompt']
@@ -77,6 +86,7 @@ ${slideType['content-Prompt']
   .replace('{topic}', topic)
   .replace('{presentationName}', presentationName)
   .replace('{slideTitlesString}', slideTitlesString)}
+${webSearchPrompt ? `\n\nWEB SEARCH RESULTS:\n${webSearchPrompt}` : ''}
 ${tonePrompt}
 ${commonRules}
 ${slideType['format-Prompt'] || ''}
@@ -100,6 +110,7 @@ export async function generateSlideContent(params: {
   topic: string;
   slideTitlesString: string;
   tone: string;
+  webSearch: boolean;
 }): Promise<SlideContent> {
   return withRetry(
     generateSlideContentNoRetry,
@@ -111,7 +122,13 @@ export async function generateSlideContent(params: {
           return getDefaultSlideContent(type, title, topic);
         } catch (error) {
           console.error(`Error creating fallback content for ${type} slide:`, error);
-          return { title: title, content: ['Content generation failed.'] } as ContentSlideContent;
+          return parseSlideContent(
+            JSON.stringify({
+              title,
+              content: [`Failed to generate content for this slide. Please try again later.`], 
+            }),
+            'content'
+          );
         }
       }
     }

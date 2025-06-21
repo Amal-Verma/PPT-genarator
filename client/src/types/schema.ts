@@ -1,4 +1,4 @@
-export interface SlideConfig {
+export type SlideConfig = {
   schema: {
     [key: string]: string;
   };
@@ -13,78 +13,93 @@ export type PresentationTitle = {
   webSearch: boolean
 }
 
-export interface SlideSchema {
+export type SlideSchema = {
   slides: {
     [key: string]: SlideConfig;
   };
 }
 
+export type commonSchema = {
+  speakNote: string;
+}
+
 // Content type definitions
-export interface ContentSlideContent {
+export type ContentSlideContent = {
   title: string;
   content: string[];
 }
+& commonSchema; // Common schema for all content types
 
-export interface QuoteSlideContent {
+export type QuoteSlideContent = {
   author: string;
   quote: string;
 }
+& commonSchema; // Common schema for all content types
 
 // New slide content types
-export interface TitleSlideContent {
+export type TitleSlideContent = {
   mainTitle: string;
   subtitle: string;
 }
+& commonSchema; // Common schema for all content types
 
-export interface IndexSlideContent {
+export type IndexSlideContent = {
   items: string[];  
 }
+& commonSchema; // Common schema for all content types
 
-export interface ThankYouSlideContent {
+export type ThankYouSlideContent = {
   message?: string; // Optional custom message
 }
+& commonSchema; // Common schema for all content types
 
 // New slide content types
-export interface ComparisonSlideContent {
+export type ComparisonSlideContent = {
   title: string;
   leftHeader: string;
   rightHeader: string;
   leftPoints: string[];
   rightPoints: string[];
 }
+& commonSchema; // Common schema for all content types
 
-export interface StatisticsSlideContent {
+export type StatisticsSlideContent = {
   title: string;
   stats: Array<{
     value: string;
     description: string;
-  }>;
+  }>
 }
+& commonSchema; // Common schema for all content types
 
-export interface TimelineSlideContent {
+export type TimelineSlideContent = {
   title: string;
   events: Array<{
     date: string;
     description: string;
-  }>;
+  }>
 }
+& commonSchema; // Common schema for all content types
 
-export interface DefinitionSlideContent {
+export type DefinitionSlideContent = {
   term: string;
   definition: string;
   examples: string[];
 }
+& commonSchema; // Common schema for all content types
 
-export interface SectionSlideContent {
+export type SectionSlideContent = {
   sectionTitle: string;
   description: string;
 }
+& commonSchema; // Common schema for all content types
 
-export interface CallToActionSlideContent {
+export type CallToActionSlideContent = {
   title: string;
   mainAction: string;
   steps: string[];
 }
+& commonSchema; // Common schema for all content types
 
 // Union type for slide content based on slide type
 export type SlideContent = (
@@ -99,13 +114,9 @@ export type SlideContent = (
   | DefinitionSlideContent
   | SectionSlideContent
   | CallToActionSlideContent
-) & {
-  speakNote: string;
-  // webSearch: boolean; // Optional field for web search
-};
-
+)
 // Presentation slide structure
-export interface PresentationSlide {
+export type PresentationSlide = {
   SlideNumber: number;
   slideType: 'title' | 'content' | 'quote' | 'index' | 'thankYou' | 'comparison' | 'statistics' | 'timeline' | 'definition' | 'section' | 'callToAction';
   Title: string;
@@ -113,8 +124,8 @@ export interface PresentationSlide {
   webSearch: boolean; // Optional field for web search
 }
 
-// New interface for overall presentation structure
-export interface Presentation {
+// New type for overall presentation structure
+export type Presentation = {
   name: string; // Summary/name of the entire presentation
   slides: PresentationSlide[];
 }

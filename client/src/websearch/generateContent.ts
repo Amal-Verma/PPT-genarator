@@ -31,7 +31,7 @@ export const generateContent = async (topic: string, description: string,breath:
     if summaries are not relevant to the topic, return an content using your own knowledge.
     
     Awarness: There are other topics besides this so avoid information that is not relevant to the topic at hand.
-    Most importantly, ensure that the content as short as possible (2 para max) while still being informative and comprehensive.
+    Most importantly, ensure that the content as short as possible while still being informative and comprehensive.
     `;
 
     const response = await getGeminiResponse(context, false);
